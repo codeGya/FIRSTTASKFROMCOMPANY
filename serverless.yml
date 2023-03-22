@@ -1,0 +1,65 @@
+service: FIRSTTASK
+frameworkVersion: '3'
+
+
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi:
+          path: /
+          method: get
+
+
+  signUpUser:
+    handler: Functions/signup.signUpFunction
+    events:
+      - httpApi:
+          path: /sign/up/user
+          method: post  
+
+  signInpUser:
+    handler: Functions/signin.signInUser
+    events:
+      - httpApi:
+          path: /sign/in/user
+          method: post 
+
+  updateUser:
+    handler: Functions/update.updateUserDetails
+    events:
+      - httpApi:
+          path: /update/user
+          method: post
+
+  notesOfUser:
+    handler: Functions/nofnotes.numberOfTextOfUser
+    events:
+      - httpApi:
+          path: /insert/user/notes
+          method: post    
+
+  deleteNotesOfUser:
+    handler: Functions/deletenotes.deleteUser
+    events:
+      - httpApi:
+          path: /delete/notes/user
+          method: delete      
+
+  numberOfNotesOfUser:
+    handler: Functions/nofnotes.numberOfTextOfUser
+    events:
+      - httpApi:
+          path: /number/notes/user
+          method: get                   
+
+plugins:
+  - serverless-offline                                    
+                  
+
+
