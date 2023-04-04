@@ -1,29 +1,16 @@
 import mongodb from "mongodb";
 
-console.log(2)
 
-// export const connectionThread=async ()=>{
-//     try{
-//         console.log('i am not able to debug a small error')
-//         return await MongoClient.connect('mongodb+srv://user1:840yrDdPwllFQPMO@cluster0.2q0h8tj.mongodb.net/serverless?retryWrites=true&w=majority')
 
-//     }
-//     catch (error){
-//         console.log(error)
-//     }
 
-// }
-
-// "../Connection/connection.js").connectionThread;
-// console.log(connectionThread,'hey i am connection thread')
 import bcrypt from "bcrypt";
-// import mongodb from "mongodb";
-// const MongoClient=mongodb.MongoClient
+
 
 export const signUpFunction = async (event) => {
   try {
+    console.log(event, 'hey i am event of signup.js')
     const userInput = JSON.parse(event.body);
-    //console.log(connectionThread);
+    console.log(userInput, 'hey i am userInput')
 
     let { firstname, email, lastname, mobilenumber, address, password } =
       userInput;
@@ -33,41 +20,42 @@ export const signUpFunction = async (event) => {
     const client = await MongoClient.connect(
       "mongodb+srv://user1:840yrDdPwllFQPMO@cluster0.2q0h8tj.mongodb.net/serverless?retryWrites=true&w=majority"
     );
-    console.log(client,'i am client')
+    console.log(client, 'i am client')
 
-    //   "mongodb+srv://user1:840yrDdPwllFQPMO@cluster0.2q0h8tj.mongodb.net/serverless?retryWrites=true&w=majority"
-    // );
+
     let db = client.db();
-    console.log(db,'db')
+    console.log(db, 'db')
 
-    // console.log("when you will be back to bengaluru");
-    // console.log(client);
 
-    bcrypt.hash(password,10,async(error, hash) => {
-      
-      await db.collection("users").insertOne({
-        firstName: firstname,
-        lastName: lastname,
-        email: email,
-        mobileNumber: mobilenumber,
-        address: address,
-        password: hash,
-      });
-      console.log(hash)
-      console.log(error,'hash error')
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+    console.log(hashedPassword)
+
+    await db.collection("users").insertOne({
+      firstName: firstname,
+      lastName: lastname,
+      email: email,
+      mobileNumber: mobilenumber,
+      address: address,
+      password: hashedPassword,
     });
 
+    let data = JSON.stringify({ message: "User registered successfully" })
+    console.log(data, 'i am data of signup after stringyfying')
+
+    console.log(data)
     return {
-      statusCode: 200,
-      headers: {
+      "statusCode": 200,
+      "headers": {
         "Access-Control-Allow-Origin": "*",
         "Access-Control-Allow-Credentials": true,
       },
+      body: data
     };
   } catch (error) {
     console.log("error", error);
     return {
-      statusCode: 400,
+      "statusCode": 400,
     };
   }
 };

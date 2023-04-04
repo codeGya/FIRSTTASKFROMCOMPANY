@@ -38,7 +38,7 @@ functions:
           method: post
 
   notesOfUser:
-    handler: Functions/nofnotes.numberOfTextOfUser
+    handler: Functions/notes.userNotes
     events:
       - httpApi:
           path: /insert/user/notes

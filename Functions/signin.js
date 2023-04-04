@@ -1,10 +1,16 @@
 import bcrypt from "bcrypt";
-// import {connectionThread} from '../Connection/connection.js'
+
 import jwt from "jsonwebtoken";
+
 import mongodb from "mongodb";
 
+
+
 export const signInUser = async (event) => {
+  console.log(event.body)
+
   const userInput = JSON.parse(event.body);
+  console.log(userInput, 'userInput of logged in users')
 
   const { email, password } = userInput;
   const MongoClient = mongodb.MongoClient;
@@ -20,23 +26,54 @@ export const signInUser = async (event) => {
   console.log(userData);
   let returnValue;
   if (userData.length > 0) {
-    bcrypt.compare(password, userData[0].password, async (err, result) => {
-      if (result === true) {
-        const authentication = jwt.sign({ userId: userData[0]._id }, "abcde");
-        console.log(authentication, "authentication");
-        returnValue= {
-          statusCode: 200,
-          privateKey: authentication,
-        };
-      } else {
-        returnValue= {
-          statusCode: 400,
-        };
-      }
-      console.log(err, "err in jwt");
-    });
-    //console.log(err, "err in jwt");
-  }
+    const dataMatchingValue = await bcrypt.compare(password, userData[0].password)
 
+
+    if (dataMatchingValue === true) {
+
+      const authentication = await jwt.sign({ userId: userData[0]._id }, 'abcde')
+
+      const response = JSON.stringify({
+        message: "User successfully logged in",
+        privateKey: authentication
+
+
+      })
+
+      returnValue = {
+        "statusCode": 200,
+
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Credentials": true,
+        },
+
+        "body": response
+      }
+
+
+
+
+    } else {
+      let message = {
+        message: "User doesn't exist!"
+      }
+      returnValue = {
+        "statusCode": 400,
+        "body": JSON.stringify(message)
+
+
+
+      };
+
+
+
+
+    }
+
+  }
   return returnValue
-};
+}
+
+
+
