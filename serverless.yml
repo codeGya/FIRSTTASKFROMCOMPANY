@@ -8,18 +8,11 @@ provider:
   runtime: nodejs18.x
 
 functions:
-  api:
-    handler: index.handler
-    events:
-      - httpApi:
-          path: /
-          method: get
-
-
+  
   signUpUser:
     handler: Functions/signup.signUpFunction
     events:
-      - httpApi:
+      - http:
           path: /sign/up/user
           method: post  
 
@@ -33,28 +26,28 @@ functions:
   updateUser:
     handler: Functions/update.updateUserDetails
     events:
-      - httpApi:
+      - http:
           path: /update/user
           method: post
 
   notesOfUser:
     handler: Functions/notes.userNotes
     events:
-      - httpApi:
+      - http:
           path: /insert/user/notes
           method: post    
 
   deleteNotesOfUser:
     handler: Functions/deletenotes.deleteUser
     events:
-      - httpApi:
+      - http:
           path: /delete/notes/user
           method: delete      
 
   numberOfNotesOfUser:
     handler: Functions/nofnotes.numberOfTextOfUser
     events:
-      - httpApi:
+      - http:
           path: /number/notes/user
           method: get                   
 
