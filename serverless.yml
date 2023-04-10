@@ -19,7 +19,7 @@ functions:
   signInpUser:
     handler: Functions/signin.signInUser
     events:
-      - httpApi:
+      - http:
           path: /sign/in/user
           method: post 
 
